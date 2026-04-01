@@ -35,13 +35,13 @@
                             Posted on {{ date('d M Y') }}
                         </p>
 
-                        
+
                         <p class="fs-5 text-dark" style="line-height: 1.8;">
                             {{ $post['content'] }}
                         </p>
 
                         <div class="mt-5">
-                            <a href="/home" class="btn btn-outline-secondary">
+                            <a href="/posts" class="btn btn-outline-secondary">
                                 ← Back to Home
                             </a>
                         </div>

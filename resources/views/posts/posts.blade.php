@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,14 +10,14 @@
 
 <body class="bg-light">
 
-   
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand fw-bold" href="#">My Blog</a>
         </div>
     </nav>
 
-   
+
     <div class="container py-5">
 
         <div class="text-center mb-5">
@@ -25,12 +26,12 @@
         </div>
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold mb-0">All Posts</h2>
+            <h2 class="fw-bold mb-0">All Posts</h2>
 
-    <a href="/post/create" class="btn btn-primary px-4 shadow-sm">
-        + Create Post
-    </a>
-</div>
+            <a href="/post/create" class="btn btn-primary px-4 shadow-sm">
+                + Create Post
+            </a>
+        </div>
 
         <div class="row g-4">
             @foreach ($posts as $post)
@@ -46,11 +47,23 @@
                                 {{ Str::limit($post['content'], 100) }}
                             </p>
 
-                            <div class="mt-auto">
-                                <a href="/post/{{ $post['id'] }}" class="btn btn-outline-primary w-100">
+                            <div class="mt-auto d-flex gap-2">
+                                <a href="/post/{{ $post['id'] }}" class="btn btn-primary flex-fill">
                                     View Details
                                 </a>
+                                <a href="/post/{{ $post['id'] }}/edit" class="btn btn-warning flex-fill">
+                                    Edit
+                                </a>
+                                <form action="/post/{{ $post['id'] }}" method="POST" class="flex-fill"
+                                    onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger w-100">
+                                        Delete
+                                    </button>
+                                </form>
                             </div>
+
 
                         </div>
                     </div>
@@ -62,4 +75,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

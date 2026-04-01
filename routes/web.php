@@ -1,43 +1,24 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
 
-
-$posts = [
-        ['id' => 1, 'title' => 'First Post', 'content' => 'This is the first post.'],
-        ['id' => 2, 'title' => 'Second Post', 'content' => 'This is the second post.'],
-        ['id' => 3, 'title' => 'Third Post', 'content' => 'This is the third post.'],
-    ];
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/post/create', function () {
-    return view('posts.create');
-});
 
 
-Route::get('/home', function ()  use ($posts) {
-    return view('posts.home', compact('posts'));
-});
+Route::get('/posts' , [PostController::class , 'index']);
+Route::get('/post/{id}', [PostController::class, 'show'])-> where ('id', '[0-9]+');
+Route::get('/post/create', [PostController::class, 'create']);
+Route::post('/post', [PostController::class , 'store']);
+Route::get('/post/{id}/edit', [PostController::class, 'edit']);
+Route::put('/post/{id}', [PostController::class , 'update']);
+Route::delete('/post/{id}', [PostController::class , 'destroy']);
 
-Route::get('/post/{id}', function ($id) use ($posts){
-    $post = collect($posts)->firstWhere('id', $id);
-    return view('posts.details', compact('post'));
-});
 
-Route ::post('/post/create', function () use (&$posts) {
 
-    $title = $_POST['title'] ?? '';
-    $content = $_POST['content'] ?? '';
-
-    $posts[] = [
-        'id' => count($posts) + 1,
-        'title' => $title,
-        'content' => $content,
-    ];
-    return 'Post created successfully!' . '<br><br><a href="/home">Back to Home</a>';
-});
 
 
