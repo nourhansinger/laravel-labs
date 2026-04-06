@@ -28,17 +28,25 @@
                     <div class="card-body p-5">
 
                         <h2 class="fw-bold mb-3 text-primary">
-                            {{ $post['title'] }}
+                            {{ $post->title }}
                         </h2>
 
                         <p class="text-muted mb-4">
-                            Posted on {{ date('d M Y') }}
+                            Posted on {{ $post->created_at->format('d M Y') }}
                         </p>
 
 
                         <p class="fs-5 text-dark" style="line-height: 1.8;">
-                            {{ $post['content'] }}
+                            {{ $post->content }}
                         </p>
+
+
+                        <div class="mt-4 p-3 bg-light rounded">
+                            <h5 class="text-secondary mb-2">Author Details</h5>
+                            <p class="mb-1"><strong>Name:</strong> {{ $post->user->name }}</p>
+                            <p class="mb-0"><strong>Email:</strong> {{ $post->user->email }}</p>
+                        </div>
+                        
 
                         <div class="mt-5">
                             <a href="/posts" class="btn btn-outline-secondary">

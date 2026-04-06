@@ -38,6 +38,26 @@
                                           placeholder="Write your post here...">{{ $post['content'] }}</textarea>
                             </div>
 
+                             <div class="mb-4">
+                                <label class="form-label">Select User</label>
+
+                                <select name="user_id" class="form-control @error('user_id') is-invalid @enderror">
+                                    <option value="">{{ $post->user->name }}</option>
+
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">
+                                            {{ $user->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @error('user_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+
                             <div class="d-flex justify-content-between">
                                 <a href="{{ url('/posts') }}" class="btn btn-outline-secondary">Cancel</a>
                                 <button type="submit" class="btn btn-primary px-4">Update</button>

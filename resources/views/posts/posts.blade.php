@@ -6,6 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .custom-pagination {
+            margin-top: 2.5rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .custom-pagination .page-link {
+            color: #0d6efd;
+            border-radius: 0.75rem;
+            padding: 0.65rem 0.9rem;
+            border-color: #dee2e6;
+            transition: all 0.2s ease;
+        }
+
+        .custom-pagination .page-link:hover {
+            background-color: #e7f1ff;
+        }
+
+        .custom-pagination .page-item.active .page-link {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+            color: #fff;
+        }
+
+        .custom-pagination .page-item.disabled .page-link {
+            color: #adb5bd;
+            background-color: #fff;
+        }
+    </style>
+
 </head>
 
 <body class="bg-light">
@@ -13,7 +44,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">My Blog</a>
+            <a class="navbar-brand fw-bold" href="/posts">My Blog</a>
         </div>
     </nav>
 
@@ -25,12 +56,36 @@
             <p class="text-muted">Check out our newest updates</p>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-bold mb-0">All Posts</h2>
+        @if (session('status'))
+            <div class="alert alert-success">
+                {{ session('status') }}
+            </div>
+        @endif
 
-            <a href="/post/create" class="btn btn-primary px-4 shadow-sm">
-                + Create Post
-            </a>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-0">All Posts</h2>
+                @if (!empty($trashedCount) && $trashedCount > 0)
+                    <p class="text-muted mb-0">You have {{ $trashedCount }} deleted
+                        {{ Str::plural('post', $trashedCount) }} that can be restored.</p>
+                @endif
+            </div>
+
+            <div class="d-flex gap-2">
+                @if (!empty($trashedCount) && $trashedCount > 0)
+                    <form action="/posts/restore" method="POST"
+                        onsubmit="return confirm('Restore all deleted posts?');">
+                        @csrf
+                        <button type="submit" class="btn btn-success px-4 shadow-sm">
+                            Restore Deleted Posts
+                        </button>
+                    </form>
+                @endif
+
+                <a href="/post/create" class="btn btn-primary px-4 shadow-sm">
+                    + Create Post
+                </a>
+            </div>
         </div>
 
         <div class="row g-4">
@@ -69,6 +124,10 @@
                     </div>
                 </div>
             @endforeach
+        </div>
+
+        <div class="custom-pagination">
+            {{ $posts->onEachSide(1)->links('pagination::bootstrap-5') }}
         </div>
 
     </div>

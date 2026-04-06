@@ -3,101 +3,84 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use \App\Models\Post;
+use \App\Models\User;
+use App\Http\Requests\StorePostRequest;
 
 class PostController extends Controller
 {
     public function index()
     {
-        $posts = [
-            ['id' => 1, 'title' => 'First Post', 'content' => 'This is the first post.'],
-            ['id' => 2, 'title' => 'Second Post', 'content' => 'This is the second post.'],
-            ['id' => 3, 'title' => 'Third Post', 'content' => 'This is the third post.'],
-            ['id' => 4, 'title' => 'Fourth Post', 'content' => 'This is the fourth post.'],
-            ['id' => 5, 'title' => 'Fifth Post', 'content' => 'This is the fifth post.'],
-            ['id' => 6, 'title' => 'Sixth Post', 'content' => 'This is the sixth post.'],
-            ['id' => 7, 'title' => 'Seventh Post', 'content' => 'This is the seventh post.'],
-            ['id' => 8, 'title' => 'Eighth Post', 'content' => 'This is the eighth post.'],
-            ['id' => 9, 'title' => 'Ninth Post', 'content' => 'This is the ninth post.'],
-            ['id' => 10,'title' => 'Tenth Post', 'content' => 'This is the tenth post.'],
-        ];
+        $posts = Post::paginate(10);
+        $trashedCount = Post::onlyTrashed()->count();
 
-        return view('posts.posts', compact('posts'));
+        return view('posts.posts', compact('posts', 'trashedCount'));
+    }
+
+    public function restoreAll()
+    {
+        Post::onlyTrashed()->restore();
+
+        return redirect('/posts')->with('status', 'All deleted posts have been restored.');
     }
 
     public function show(string $id)
     {
-        $posts = [
-            ['id' => 1, 'title' => 'First Post', 'content' => 'This is the first post.'],
-            ['id' => 2, 'title' => 'Second Post', 'content' => 'This is the second post.'],
-            ['id' => 3, 'title' => 'Third Post', 'content' => 'This is the third post.'],
-            ['id' => 4, 'title' => 'Fourth Post', 'content' => 'This is the fourth post.'],
-            ['id' => 5, 'title' => 'Fifth Post', 'content' => 'This is the fifth post.'],
-            ['id' => 6, 'title' => 'Sixth Post', 'content' => 'This is the sixth post.'],
-            ['id' => 7, 'title' => 'Seventh Post', 'content' => 'This is the seventh post.'],
-            ['id' => 8, 'title' => 'Eighth Post', 'content' => 'This is the eighth post.'],
-            ['id' => 9, 'title' => 'Ninth Post', 'content' => 'This is the ninth post.'],
-            ['id' => 10,'title' => 'Tenth Post', 'content' => 'This is the tenth post.'],
-        ];
-
-        $post = collect($posts)->firstWhere('id', $id);
-
+        $post= Post::find($id);
         return view('posts.details', compact('post'));
     }
 
     public function create()
     {
-        return view('posts.create');
+        $users = User::all();
+        return view('posts.create', compact('users'));
+
     }
 
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        echo "Created Successfully";
+        $post = new Post();
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->user_id = $request->user_id;
+
+        $post->save();
+
         return redirect('/posts');
 
     }
 
     public function edit(string $id)
     {
-       $posts = [
-            ['id' => 1, 'title' => 'First Post', 'content' => 'This is the first post.'],
-            ['id' => 2, 'title' => 'Second Post', 'content' => 'This is the second post.'],
-            ['id' => 3, 'title' => 'Third Post', 'content' => 'This is the third post.'],
-            ['id' => 4, 'title' => 'Fourth Post', 'content' => 'This is the fourth post.'],
-            ['id' => 5, 'title' => 'Fifth Post', 'content' => 'This is the fifth post.'],
-            ['id' => 6, 'title' => 'Sixth Post', 'content' => 'This is the sixth post.'],
-            ['id' => 7, 'title' => 'Seventh Post', 'content' => 'This is the seventh post.'],
-            ['id' => 8, 'title' => 'Eighth Post', 'content' => 'This is the eighth post.'],
-            ['id' => 9, 'title' => 'Ninth Post', 'content' => 'This is the ninth post.'],
-            ['id' => 10,'title' => 'Tenth Post', 'content' => 'This is the tenth post.'],
-        ];
-
-        $post = collect($posts)->firstWhere('id', $id);
-
-        return view('posts.edit', compact('post'));
+        $post = Post::find($id);
+        $users =User::all();
+        return view('posts.edit', compact('post','users'));
     }
 
 
-    public function update(Request $request, string $id)
+    public function update(StorePostRequest $request, string $id)
     {
-         echo "Updated Successfully";
+        // $request->validate([
+        //     'title' => 'required|min:3',
+        //     'content' => 'required|min:10',
+        //     'user_id' => 'required|exists:users,id'
+        // ]);
+
+        $post = Post::find($id);
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->user_id = $request->user_id;
+
+        $post->save();
+
         return redirect('/posts');
     }
 
 
     public function destroy(string $id)
     {
-        $posts = [
-            ['id' => 1, 'title' => 'First Post', 'content' => 'This is the first post.'],
-            ['id' => 2, 'title' => 'Second Post', 'content' => 'This is the second post.'],
-            ['id' => 3, 'title' => 'Third Post', 'content' => 'This is the third post.'],
-            ['id' => 4, 'title' => 'Fourth Post', 'content' => 'This is the fourth post.'],
-            ['id' => 5, 'title' => 'Fifth Post', 'content' => 'This is the fifth post.'],
-            ['id' => 6, 'title' => 'Sixth Post', 'content' => 'This is the sixth post.'],
-            ['id' => 7, 'title' => 'Seventh Post', 'content' => 'This is the seventh post.'],
-            ['id' => 8, 'title' => 'Eighth Post', 'content' => 'This is the eighth post.'],
-            ['id' => 9, 'title' => 'Ninth Post', 'content' => 'This is the ninth post.'],
-            ['id' => 10,'title' => 'Tenth Post', 'content' => 'This is the tenth post.'],
-        ];
+        $post = Post::find($id);
+        $post->delete();
         return redirect('/posts');
     }
 }

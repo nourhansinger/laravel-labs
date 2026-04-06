@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,8 +36,8 @@
                             <div class="mb-3">
                                 <label class="form-label">Post Title</label>
                                 <input type="text" name="title"
-                                       class="form-control @error('title') is-invalid @enderror"
-                                       placeholder="Enter post title" >
+                                    class="form-control @error('title') is-invalid @enderror"
+                                    placeholder="Enter post title">
 
 
                                 @error('title')
@@ -49,11 +50,30 @@
 
                             <div class="mb-4">
                                 <label class="form-label">Content</label>
-                                <textarea name="content" rows="5"
-                                          class="form-control @error('content') is-invalid @enderror"
-                                          placeholder="Write your post here..."></textarea>
+                                <textarea name="content" rows="5" class="form-control @error('content') is-invalid @enderror"
+                                    placeholder="Write your post here..."></textarea>
 
                                 @error('content')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Select User</label>
+
+                                <select name="user_id" class="form-control @error('user_id') is-invalid @enderror">
+                                    <option value="">-- Choose User --</option>
+
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">
+                                            {{ $user->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @error('user_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -84,4 +104,5 @@
     </div>
 
 </body>
+
 </html>
