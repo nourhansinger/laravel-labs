@@ -57,29 +57,30 @@
         </div>
 
         @if (session('status'))
-            <div class="alert alert-success">
-                {{ session('status') }}
-            </div>
+        <div class="alert alert-success">
+            {{ session('status') }}
+        </div>
         @endif
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold mb-0">All Posts</h2>
                 @if (!empty($trashedCount) && $trashedCount > 0)
-                    <p class="text-muted mb-0">You have {{ $trashedCount }} deleted
-                        {{ Str::plural('post', $trashedCount) }} that can be restored.</p>
+                <p class="text-muted mb-0">You have {{ $trashedCount }} deleted
+                    {{ Str::plural('post', $trashedCount) }} that can be restored.
+                </p>
                 @endif
             </div>
 
             <div class="d-flex gap-2">
                 @if (!empty($trashedCount) && $trashedCount > 0)
-                    <form action="/posts/restore" method="POST"
-                        onsubmit="return confirm('Restore all deleted posts?');">
-                        @csrf
-                        <button type="submit" class="btn btn-success px-4 shadow-sm">
-                            Restore Deleted Posts
-                        </button>
-                    </form>
+                <form action="/posts/restore" method="POST"
+                    onsubmit="return confirm('Restore all deleted posts?');">
+                    @csrf
+                    <button type="submit" class="btn btn-success px-4 shadow-sm">
+                        Restore Deleted Posts
+                    </button>
+                </form>
                 @endif
 
                 <a href="/post/create" class="btn btn-primary px-4 shadow-sm">
@@ -90,39 +91,47 @@
 
         <div class="row g-4">
             @foreach ($posts as $post)
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-body d-flex flex-column">
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm border-0">
+                    @if ($post->image)
+                    <img src="{{ asset('storage/' . $post->image) }}" class="card-img-top"
+                        alt="{{ $post->title }}" style="height: 200px; object-fit: cover;">
+                    @endif
+                    <div class="card-body d-flex flex-column">
 
-                            <h5 class="card-title fw-bold text-primary">
-                                {{ $post['title'] }}
-                            </h5>
+                        <h5 class="card-title fw-bold text-primary">
+                            {{ $post['title'] }}
+                        </h5>
 
-                            <p class="card-text text-muted">
-                                {{ Str::limit($post['content'], 100) }}
-                            </p>
+                        <p class="text-muted small mb-2">
+                            By: {{ $post->user->name ?? 'Unknown' }}
+                        </p>
 
-                            <div class="mt-auto d-flex gap-2">
-                                <a href="/post/{{ $post['id'] }}" class="btn btn-primary flex-fill">
-                                    View Details
-                                </a>
-                                <a href="/post/{{ $post['id'] }}/edit" class="btn btn-warning flex-fill">
-                                    Edit
-                                </a>
-                                <form action="/post/{{ $post['id'] }}" method="POST" class="flex-fill"
-                                    onsubmit="return confirm('Are you sure you want to delete this post?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger w-100">
-                                        Delete
-                                    </button>
-                                </form>
-                            </div>
+                        <p class="card-text text-muted">
+                            {{ Str::limit($post['content'], 100) }}
+                        </p>
 
-
+                        <div class="mt-auto d-flex gap-2">
+                            <a href="/post/{{ $post['id'] }}" class="btn btn-primary flex-fill">
+                                View Details
+                            </a>
+                            <a href="/post/{{ $post['id'] }}/edit" class="btn btn-warning flex-fill">
+                                Edit
+                            </a>
+                            <form action="/post/{{ $post['id'] }}" method="POST" class="flex-fill"
+                                onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger w-100">
+                                    Delete
+                                </button>
+                            </form>
                         </div>
+
+
                     </div>
                 </div>
+            </div>
             @endforeach
         </div>
 

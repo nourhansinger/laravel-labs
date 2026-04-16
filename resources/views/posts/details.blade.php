@@ -36,6 +36,12 @@
                             Posted on {{ $post->created_at->format('d M Y') }}
                         </p>
 
+                        @if ($post->image)
+                        <div class="mb-4">
+                            <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}"
+                                class="img-fluid rounded" style="max-height: 400px; object-fit: cover; width: 100%;">
+                        </div>
+                        @endif
 
                         <p class="fs-5 text-dark" style="line-height: 1.8;">
                             {{ $post->content }}
@@ -52,28 +58,28 @@
                             <h4 class="mb-3">Comments</h4>
 
                             @if (session('status'))
-                                <div class="alert alert-success">
-                                    {{ session('status') }}
-                                </div>
+                            <div class="alert alert-success">
+                                {{ session('status') }}
+                            </div>
                             @endif
 
                             @if ($post->comments->isEmpty())
-                                <p class="text-muted">No comments yet. Be the first to comment!</p>
+                            <p class="text-muted">No comments yet. Be the first to comment!</p>
                             @else
-                                <div class="list-group mb-4">
-                                    @foreach ($post->comments as $comment)
-                                        <div class="list-group-item border-0 shadow-sm mb-3 rounded">
-                                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <div>
-                                                    <strong>{{ $comment->author_name }}</strong>
-                                                    <span class="text-muted">•
-                                                        {{ $comment->created_at->diffForHumans() }}</span>
-                                                </div>
-                                            </div>
-                                            <p class="mb-0">{{ $comment->body }}</p>
+                            <div class="list-group mb-4">
+                                @foreach ($post->comments as $comment)
+                                <div class="list-group-item border-0 shadow-sm mb-3 rounded">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <strong>{{ $comment->author_name }}</strong>
+                                            <span class="text-muted">•
+                                                {{ $comment->created_at->diffForHumans() }}</span>
                                         </div>
-                                    @endforeach
+                                    </div>
+                                    <p class="mb-0">{{ $comment->body }}</p>
                                 </div>
+                                @endforeach
+                            </div>
                             @endif
 
                             <form action="/post/{{ $post->id }}/comments" method="POST">
@@ -85,7 +91,7 @@
                                         value="{{ old('author_name') }}"
                                         class="form-control @error('author_name') is-invalid @enderror">
                                     @error('author_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
@@ -93,7 +99,7 @@
                                     <label for="body" class="form-label">Comment</label>
                                     <textarea name="body" id="body" rows="4" class="form-control @error('body') is-invalid @enderror">{{ old('body') }}</textarea>
                                     @error('body')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 

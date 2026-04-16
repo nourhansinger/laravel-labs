@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Post</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-light">
 
 
@@ -23,38 +25,60 @@
 
                         <h3 class="fw-bold mb-4 text-center">Edit Post</h3>
 
-                        <form action="/post/{{$post['id']}}" method="POST">
+                        <form action="/post/{{$post['id']}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="mb-3">
                                 <label class="form-label">Title</label>
                                 <input type="text" name="title" class="form-control"
-                                       value="{{ $post['title'] }}" placeholder="Enter post title">
+                                    value="{{ $post['title'] }}" placeholder="Enter post title">
                             </div>
 
                             <div class="mb-4">
                                 <label class="form-label">Content</label>
                                 <textarea name="content" rows="5" class="form-control"
-                                          placeholder="Write your post here...">{{ $post['content'] }}</textarea>
+                                    placeholder="Write your post here...">{{ $post['content'] }}</textarea>
                             </div>
 
-                             <div class="mb-4">
+                            <div class="mb-4">
                                 <label class="form-label">Select User</label>
 
                                 <select name="user_id" class="form-control @error('user_id') is-invalid @enderror">
                                     <option value="">{{ $post->user->name }}</option>
 
                                     @foreach ($users as $user)
-                                        <option value="{{ $user->id }}">
-                                            {{ $user->name }}
-                                        </option>
+                                    <option value="{{ $user->id }}">
+                                        {{ $user->name }}
+                                    </option>
                                     @endforeach
                                 </select>
 
                                 @error('user_id')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Post Image</label>
+
+                                @if ($post->image)
+                                <div class="mb-2">
+                                    <img src="{{ asset('storage/' . $post->image) }}" alt="Current Image"
+                                        class="img-thumbnail" style="max-height: 150px;">
+                                    <p class="text-muted small mt-1">Current image</p>
+                                </div>
+                                @endif
+
+                                <input type="file" name="image"
+                                    class="form-control @error('image') is-invalid @enderror"
+                                    accept="image/*">
+
+                                @error('image')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                                 @enderror
                             </div>
 
@@ -72,4 +96,5 @@
     </div>
 
 </body>
+
 </html>

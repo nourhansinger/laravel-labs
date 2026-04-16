@@ -31,7 +31,7 @@
                         <h3 class="fw-bold mb-4 text-center">Create New Post</h3>
 
 
-                        <form action="/post" method="post">
+                        <form action="/post" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
                                 <label class="form-label">Post Title</label>
@@ -41,9 +41,9 @@
 
 
                                 @error('title')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                                 @enderror
                             </div>
 
@@ -54,9 +54,9 @@
                                     placeholder="Write your post here..."></textarea>
 
                                 @error('content')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                                 @enderror
                             </div>
 
@@ -67,16 +67,30 @@
                                     <option value="">-- Choose User --</option>
 
                                     @foreach ($users as $user)
-                                        <option value="{{ $user->id }}">
-                                            {{ $user->name }}
-                                        </option>
+                                    <option value="{{ $user->id }}">
+                                        {{ $user->name }}
+                                    </option>
                                     @endforeach
                                 </select>
 
                                 @error('user_id')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+
+
+                            <div class="mb-4">
+                                <label class="form-label">Post Image</label>
+                                <input type="file" name="image"
+                                    class="form-control @error('image') is-invalid @enderror"
+                                    accept="image/*">
+
+                                @error('image')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                                 @enderror
                             </div>
 
